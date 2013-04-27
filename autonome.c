@@ -86,17 +86,16 @@ void getparams ( char ** arfv,
   *piterations = strtol(arfv[p++], NULL,10);
 }
 
-void print_summary ( Object ** g ) {
-  int rabbits, foxes, x, y;
-  rabbits = 0;
-  foxes = 0;
+void count_animals ( Object ** g, int * prabbits, int * pfoxes ) {
+  int x, y;
+  *prabbits = 0;
+  *pfoxes = 0;
   for (x = 0; x < WIDTH; x += 1) {
     for (y = 0; y < HEIGHT; y += 1) {
-      if (g[x][y].c == RABBIT) rabbits += 1;
-      else if (g[x][y].c == FOX) foxes += 1;
+      if (g[x][y].c == RABBIT) *prabbits += 1;
+      else if (g[x][y].c == FOX) *pfoxes += 1;
     }
   }
-  printf("Rabbits: %5d, foxes: %5d\n", rabbits, foxes);
 }
 
 void * pick_one_of_three ( void * a, void * b, void * c ) {
@@ -224,6 +223,7 @@ int main ( int arfc, char ** arfv ) {
   double init_rabbit, init_fox;
 
   int iterations;
+  int rabbits, foxes;
 
   if ( arfc != 10 ) usage(arfv[0]);
 
@@ -242,11 +242,14 @@ int main ( int arfc, char ** arfv ) {
 
   clear_board(grid);
   sprinkle(grid, init_rabbit, init_fox);
-  print_summary(grid);
+  count_animals(grid, &rabbits, &foxes);
+  printf("%8d: Rabbits: %5d, foxes: %5d\n", 0, rabbits, foxes);
 
-  while ( iterations -- > 0 ) {
+  for (i = 0; i < iterations; i+=1 ) {
     iterate(grid, p_r_breed, p_f_breed, p_f_die);
-    print_summary(grid);
+    count_animals(grid, &rabbits, &foxes);
+    printf("%8d: Rabbits: %5d, foxes: %5d\n", i, rabbits, foxes);
+    if ( rabbits == 0 || foxes == 0 ) break;
   }
 
   for (i = 0; i < WIDTH; i += 1) {
