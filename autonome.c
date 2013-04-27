@@ -173,30 +173,30 @@ Object * choose_random_neighbor ( Object ** g, int x, int y ) {
   }
 }
 
-void a_neighborly_interaction ( Object * a, Object * n ) {
+void a_neighborly_interaction ( Object * a, Object * n, int x, int y ) {
   if ( a->c == FOX ) {
     if ( n->c == RABBIT ) {
       if ( p_f_breed >= random_interval() ) {
-        // printf("Fox eats rabbit, breeds\n");
+        printf("(%d,%d): Fox eats rabbit, breeds\n", x, y);
         n->c = FOX;
         n->age = 0;
       }
     } else {
       if ( p_f_die >= random_interval() ) {
-        // printf("Fox dies\n");
+        printf("(%d,%d): Fox dies\n", x, y);
         a->c = BARE;
         a->age = 0;
       }
     }
   } else if ( a->c == RABBIT ) {
     if ( n->c == BARE && p_r_breed >= random_interval() ) {
-      // printf("Rabbit breeds\n");
+      printf("(%d,%d): Rabbit breeds\n", x, y);
       n->c = RABBIT;
       n->age = 0;
     }
   } else {
     if ( n->c != BARE ) {
-      // printf("%s moves\n", n->c == RABBIT ? "Rabbit" : "Fox");
+      printf("(%d,%d): %s moves\n", x, y, n->c == RABBIT ? "Rabbit" : "Fox");
       a->c = n->c;
       a->age = n->age;
       a->c = BARE;
@@ -210,8 +210,7 @@ void iterate ( Object ** g, double p_r_breed, double p_f_breed, double p_f_die )
 
   for (x = 0; x < WIDTH; x += 1) {
     for (y = 0; y < HEIGHT; y += 1) {
-      // printf("Interacting at (%d,%d): ", x, y);
-      a_neighborly_interaction ( &(g[x][y]), choose_random_neighbor(g,x,y) );
+      a_neighborly_interaction ( &(g[x][y]), choose_random_neighbor(g,x,y), x, y );
     }
   }
 }
@@ -231,6 +230,7 @@ int main ( int arfc, char ** arfv ) {
 
   if (seed == 0) seed = time(NULL);
 
+  // printf("sizeof(Object): %d\n", sizeof(Object));
   printf("seed: %d\n", seed);
   srand(seed);
 
