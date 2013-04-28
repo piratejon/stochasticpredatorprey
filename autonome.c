@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -173,23 +174,29 @@ Object * choose_random_neighbor ( Object ** g, int x, int y ) {
   }
 }
 
+_Bool probabilistic_event_happens ( char * s, double p ) {
+  double r = random_interval();
+  printf("Checking probability of event %s: %.2f: %.2f -- %s\n", s, p, r, p >= r ? "Passes":"Fails" );
+  return p >= r;
+}
+
 void a_neighborly_interaction ( Object * a, Object * n, int x, int y ) {
   if ( a->c == FOX ) {
     if ( n->c == RABBIT ) {
-      if ( p_f_breed >= random_interval() ) {
+      if ( probabilistic_event_happens ( "Fox eats rabbit", p_f_breed ) ) {
         printf("(%d,%d): Fox eats rabbit, breeds\n", x, y);
         n->c = FOX;
         n->age = 0;
       }
     } else {
-      if ( p_f_die >= random_interval() ) {
+      if ( probabilistic_event_happens ( "Fox dies", p_f_die ) ) {
         printf("(%d,%d): Fox dies\n", x, y);
         a->c = BARE;
         a->age = 0;
       }
     }
   } else if ( a->c == RABBIT ) {
-    if ( n->c == BARE && p_r_breed >= random_interval() ) {
+    if ( n->c == BARE && probabilistic_event_happens ( "Rabbit breeds", p_r_breed ) ) {
       printf("(%d,%d): Rabbit breeds\n", x, y);
       n->c = RABBIT;
       n->age = 0;
@@ -215,6 +222,50 @@ void iterate ( Object ** g, double p_r_breed, double p_f_breed, double p_f_die )
   }
 }
 
+int RED(Creature c) {
+}
+
+int GREEN(Creature c) {
+}
+
+int BLUE(Creature c) {
+}
+
+void grid_to_raw(FILE * fp, Object ** g) {
+/***
+# ImageMagick pixel enumeration: 584,439,255,srgb
+0,0: ( 22, 21, 27)  #16151B  srgb(22,21,27)
+1,0: (  0,  0,  4)  #000004  srgb(0,0,4)
+2,0: (  9,  8, 13)  #09080D  srgb(9,8,13)
+3,0: (  0,  0,  0)  #000000  black
+4,0: (  0,  1,  0)  #000100  srgb(0,1,0)
+5,0: (  0,  1,  0)  #000100  srgb(0,1,0)
+6,0: (  4,  6,  0)  #040600  srgb(4,6,0)
+7,0: (  0,  2,  0)  #000200  srgb(0,2,0)
+8,0: (  0,  2,  0)  #000200  srgb(0,2,0)
+...
+
+574,438: (  1,  6,  0)  #010600  srgb(1,6,0)
+575,438: (  1,  6,  0)  #010600  srgb(1,6,0)
+576,438: (  4,  6,  3)  #040603  srgb(4,6,3)
+577,438: (  3,  3,  3)  #030303  grey1
+578,438: (  9,  9,  9)  #090909  srgb(9,9,9)
+579,438: (  0,  0,  0)  #000000  black
+580,438: (  3,  3,  3)  #030303  grey1
+581,438: ( 13, 13, 13)  #0D0D0D  grey5
+582,438: (  0,  0,  0)  #000000  black
+583,438: ( 22, 22, 22)  #161616  srgb(22,22,22)
+***/
+  int x, y;
+  fprintf(fp, "# ImageMagick pixel enumeration: %d,%d,255,srgb\n", WIDTH, HEIGHT);
+
+  for (y = 0; y < HEIGHT; y += 1) {
+    for (x = 0; x < WIDTH; x += 1) {
+      fprintf(fp, "%d,%d: (%3d,%3d,%3d)  #%02x%02x%02x srgb(%d,%d,%d)\n", x, y, RED(g[x][y].c), GREEN(g[x][y].c), BLUE(g[x][y].c), RED(g[x][y].c), GREEN(g[x][y].c), BLUE(g[x][y].c), RED(g[x][y].c), GREEN(g[x][y].c), BLUE(g[x][y].c));
+    }
+  }
+}
+
 int main ( int arfc, char ** arfv ) {
   int i;
   int seed;
@@ -232,7 +283,15 @@ int main ( int arfc, char ** arfv ) {
 
   // printf("sizeof(Object): %d\n", sizeof(Object));
   printf("seed: %d\n", seed);
+  printf("Probability of rabbit breeding: %.2f\n", p_r_breed);
+  printf("Probability of fox eating rabbit/breeding: %.2f\n", p_f_breed);
+  printf("Probability of fox dying: %.2f\n", p_f_die);
   srand(seed);
+
+  char dirname[512] = {0};
+  char filename[512] = {0};
+  sprintf(dirname, "%d-%d-%d-%f-%f-%f-%f-%f", WIDTH, HEIGHT, seed, init_rabbit, init_fox, p_r_breed, p_f_breed, p_f_die);
+  mkdir(dirname, 0);
 
   grid = malloc((sizeof*grid)*WIDTH);
 
@@ -247,6 +306,10 @@ int main ( int arfc, char ** arfv ) {
 
   for (i = 0; i < iterations; i+=1 ) {
     iterate(grid, p_r_breed, p_f_breed, p_f_die);
+    sprintf(filename, "%s/%05d.raw", dirname, i);
+    FILE * raw = fopen(filename, "w");
+    grid_to_raw(raw, grid)
+    fclose(raw);
     count_animals(grid, &rabbits, &foxes);
     printf("%8d: Rabbits: %5d, foxes: %5d\n", i, rabbits, foxes);
     if ( rabbits == 0 || foxes == 0 ) break;
