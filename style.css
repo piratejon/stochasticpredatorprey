@@ -1,0 +1,5 @@
+
+.inputs { width: 21em; list-style-type: none; padding-left: 0; }
+input { padding: 0; margin: 0; border-width: 1px; }
+.inputs li input { float: right; }
+

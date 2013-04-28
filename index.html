@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Model thing</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="seedrandom-min.js"></script>
+    <script src="canvasclickcoords.js"></script>
+    <script src="model.js"></script>
+  </head>
+  <body id="body" onload="model.init(128,128,4)">
+    <ul class="inputs">
+      <li><label for="percent_initial_rabbits">% rabbits: </label><input name="percent_initial_rabbits" id="percent_initial_rabbits" value="0.2" />
+      <li><label for="percent_initial_foxes">% foxes: </label><input name="percent_initial_foxes" id="percent_initial_foxes" value="0.02" />
+      <li><label for="p_rabbit_breed">P(rabbit breed): </label><input name="p_rabbit_breed" id="p_rabbit_breed" value="0.03" />
+      <li><label for="p_fox_breed">P(fox breed): </label><input name="p_fox_breed" id="p_fox_breed" value="0.03" />
+      <li><label for="p_fox_die">P(fox die): </label><input name="p_fox_die" id="p_fox_die" value="0.03" />
+    </ul>
+    <div id="wtf">
+      <div id="canvas_container">
+      </div>
+    </div>
+    <div id="logging">
+      Event log:
+      <div id="innerlogging">
+        <textarea id="logtome"></textarea>
+      </div>
+    </div>
+  </body>
+</html>
+
