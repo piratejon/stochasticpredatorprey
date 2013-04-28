@@ -1,7 +1,12 @@
+#include <sys/stat.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+
+#define RGB_BARE 0x0022ff22
+#define RGB_FOX 0x00ff2222
+#define RGB_RABBIT 0x002222ff
 
 int WIDTH;
 int HEIGHT;
@@ -223,12 +228,24 @@ void iterate ( Object ** g, double p_r_breed, double p_f_breed, double p_f_die )
 }
 
 int RED(Creature c) {
+  if ( c == BARE ) return (RGB_BARE & 0x00ff0000) >> 16;
+  if ( c == FOX ) return (RGB_FOX & 0x00ff0000) >> 16;
+  if ( c == RABBIT ) return (RGB_RABBIT & 0x00ff0000) >> 16;
+  return 0;
 }
 
 int GREEN(Creature c) {
+  if ( c == BARE ) return (RGB_BARE & 0x0000ff00) >> 8;
+  if ( c == FOX ) return (RGB_FOX & 0x0000ff00) >> 8;
+  if ( c == RABBIT ) return (RGB_RABBIT & 0x0000ff00) >> 8;
+  return 0;
 }
 
 int BLUE(Creature c) {
+  if ( c == BARE ) return (RGB_BARE & 0x000000ff);
+  if ( c == FOX ) return (RGB_FOX & 0x000000ff);
+  if ( c == RABBIT ) return (RGB_RABBIT & 0x000000ff);
+  return 0;
 }
 
 void grid_to_raw(FILE * fp, Object ** g) {
@@ -258,7 +275,6 @@ void grid_to_raw(FILE * fp, Object ** g) {
 ***/
   int x, y;
   fprintf(fp, "# ImageMagick pixel enumeration: %d,%d,255,srgb\n", WIDTH, HEIGHT);
-
   for (y = 0; y < HEIGHT; y += 1) {
     for (x = 0; x < WIDTH; x += 1) {
       fprintf(fp, "%d,%d: (%3d,%3d,%3d)  #%02x%02x%02x srgb(%d,%d,%d)\n", x, y, RED(g[x][y].c), GREEN(g[x][y].c), BLUE(g[x][y].c), RED(g[x][y].c), GREEN(g[x][y].c), BLUE(g[x][y].c), RED(g[x][y].c), GREEN(g[x][y].c), BLUE(g[x][y].c));
@@ -291,7 +307,7 @@ int main ( int arfc, char ** arfv ) {
   char dirname[512] = {0};
   char filename[512] = {0};
   sprintf(dirname, "%d-%d-%d-%f-%f-%f-%f-%f", WIDTH, HEIGHT, seed, init_rabbit, init_fox, p_r_breed, p_f_breed, p_f_die);
-  mkdir(dirname, 0);
+  mkdir(dirname, 0755);
 
   grid = malloc((sizeof*grid)*WIDTH);
 
@@ -308,7 +324,7 @@ int main ( int arfc, char ** arfv ) {
     iterate(grid, p_r_breed, p_f_breed, p_f_die);
     sprintf(filename, "%s/%05d.raw", dirname, i);
     FILE * raw = fopen(filename, "w");
-    grid_to_raw(raw, grid)
+    grid_to_raw(raw, grid);
     fclose(raw);
     count_animals(grid, &rabbits, &foxes);
     printf("%8d: Rabbits: %5d, foxes: %5d\n", i, rabbits, foxes);
