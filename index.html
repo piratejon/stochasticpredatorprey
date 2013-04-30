@@ -14,7 +14,7 @@
       <li><label for="p_rabbit_breed">P(rabbit breed): </label><input name="p_rabbit_breed" id="p_rabbit_breed" value="0.03" />
       <li><label for="p_fox_breed">P(fox breed): </label><input name="p_fox_breed" id="p_fox_breed" value="1" />
       <li><label for="p_fox_die">P(fox die): </label><input name="p_fox_die" id="p_fox_die" value="0.02" />
-      <li><label for="seed">pRNG seed (blank=ms since epoch): </label><input name="seed" id="seed" value=0 />
+      <li><label for="seed">pRNG seed (blank=ms since epoch): </label><input name="seed" id="seed" value="1367289945217" />
       <li><label for="render">Animate? </label><input type="checkbox" name="render" id="render" checked />
       <li><label for="animate_interval">Minimum delay between frames (ms): </label><input name="animate_interval" id="animate_interval" value="50" />
       <li class="control_buttons"><br/>Press <em>Reset</em> to apply parameter changes.<br/><br/><input type="button" value="Reset" onclick="model.reset(128,128,4)" /> <input type="button" value="Start" onclick="model.start()" /> <input type="button" value="Pause" onclick="model.pause()" /> <input type="button" value="Advance one iteration" onclick="model.advance()" />
