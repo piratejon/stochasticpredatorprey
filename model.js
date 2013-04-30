@@ -204,10 +204,13 @@ var model = (function () {
         G.rabbit_counter.innerHTML = rabbits;
         G.fox_counter.innerHTML = foxes;
         G.iteration_counter.innerHTML = G.iteration;
+        G.logtome.value += "Iteration: " + G.iteration + "; Rabbits: " + rabbits + "; Foxes: " + foxes + "\n";
     }
 
     function pause() {
-        clearInterval(G.timer);
+        if (G.timer) {
+            clearInterval(G.timer);
+        }
         G.timer = null;
     }
 
@@ -230,7 +233,12 @@ var model = (function () {
     }
 
     function start() {
-        G.timer = setInterval(advance, G.animate_delay);
+        pause();
+        if (G.render.checked) {
+            G.timer = setInterval(advance, 0);
+        } else {
+            G.timer = setInterval(advance, G.animate_delay);
+        }
     }
 
     function init(x_dimension, y_dimension, scale) {
@@ -269,6 +277,8 @@ var model = (function () {
             G.grid[x] = [];
         }
 
+        G.logtome.value = "Parameters: " + seed + "," + G.width + "," + G.height + "," + G.percent_initial_rabbits + "," + G.percent_initial_foxes + "," + G.p_rabbit_breed + "," + G.p_fox_breed + "," + G.p_fox_die + "\n";
+
         clear_board();
         sprinkle();
         render();
@@ -280,5 +290,10 @@ var model = (function () {
         init(x_dimension, y_dimension, scale);
     }
 
-    return { 'init': init, 'start': start, 'pause': pause, 'reset': reset, 'advance': advance };
+    function downloadlog(mimetype) {
+        var uri = "data:" + mimetype + ";filename=modellog.txt," + encodeURIComponent(G.logtome.value);
+        window.open(uri, 'modellog.txt');
+    }
+
+    return { 'init': init, 'start': start, 'pause': pause, 'reset': reset, 'advance': advance, 'downloadlog': downloadlog };
 }());

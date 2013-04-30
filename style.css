@@ -6,3 +6,6 @@ li.control_buttons input { float: none; }
 .counters li { display: inline; }
 .counters li span { width: 5em; }
 li.control_buttons { font-weight: bold; }
+#about { font-style: italic; }
+#innerlogging { width: 512px; }
+#logtome { width: 100%; }
