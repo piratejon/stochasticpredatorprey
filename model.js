@@ -4,7 +4,7 @@
 var model = (function () {
     "use strict";
 
-    var G, Color;
+    var G, Color, rabbits, foxes;
 
     // Color = Object.freeze({'bare': '#22ff22', 'rabbit': '#2222ff', 'fox': '#ff2222'});
     Color = Object.freeze({'bare': {'red': 0x22, 'green': 0xff, 'blue': 0x22}, 'rabbit': {'red': 0x22, 'green': 0x22, 'blue': 0xff}, 'fox': {'red': 0xff, 'green': 0x22, 'blue': 0x22}});
@@ -67,6 +67,8 @@ var model = (function () {
                 G.grid[x][y] = new Square(); // default is bare, age zero
             }
         }
+        rabbits = 0;
+        foxes = 0;
     }
 
     function sprinkle() {
@@ -81,6 +83,7 @@ var model = (function () {
                 if (G.grid[x][y].type === 'bare') {
                     G.grid[x][y].type = 'rabbit';
                     G.grid[x][y].age = 0;
+                    rabbits += 1;
                     break;
                 }
             }
@@ -93,6 +96,7 @@ var model = (function () {
                 if (G.grid[x][y].type === 'bare') {
                     G.grid[x][y].type = 'fox';
                     G.grid[x][y].age = 0;
+                    foxes += 1;
                     break;
                 }
             }
@@ -181,10 +185,13 @@ var model = (function () {
             if (n.type === 'rabbit') {
                 if (probabilistic_event_happens(G.p_fox_breed)) {
                     a.dropTheBabyOnEm(n);
+                    rabbits -= 1;
+                    foxes += 1;
                 }
             } else {
                 if (probabilistic_event_happens(G.p_fox_die)) {
                     a.die();
+                    foxes -= 1;
                 } else if (n.type === 'bare') {
                     a.swapWith(n);
                 }
@@ -193,6 +200,7 @@ var model = (function () {
             if (n.type === 'bare') {
                 if (probabilistic_event_happens(G.p_rabbit_breed)) {
                     a.dropTheBabyOnEm(n);
+                    rabbits += 1;
                 } else {
                     a.swapWith(n);
                 }
@@ -205,6 +213,7 @@ var model = (function () {
     }
 
     function update_counters() {
+      /*
         var x, y, rabbits, foxes;
 
         rabbits = foxes = 0;
@@ -218,6 +227,7 @@ var model = (function () {
                 }
             }
         }
+        */
 
         G.rabbit_counter.innerHTML = rabbits;
         G.fox_counter.innerHTML = foxes;
