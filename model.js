@@ -105,7 +105,7 @@ var model = (function () {
     }
 
     function render() {
-        var x, y, image, imageData, s, t, yh, xh, r, g, b, WIDTH, HEIGHT, index, sh, th, yh_inc, xh_inc, th_inc;
+        var x, y, image, imageData, id, s, t, yh, xh, r, g, b, WIDTH, HEIGHT, index, sh, th, yh_inc, xh_inc, th_inc, gt;
 
         HEIGHT = G.canvas.height;
 
@@ -114,21 +114,21 @@ var model = (function () {
         th_inc = 4 * HEIGHT;
 
         imageData = G.ctx.createImageData(G.canvas.width, G.canvas.height);
+        id = imageData.data;
 
         for (y = 0, yh = 0; y < G.height; y += 1, yh += yh_inc) {
             for (x = 0, xh = 0; x < G.width; x += 1, xh += xh_inc) {
-                r = Color[G.grid[x][y].type].red;
-                g = Color[G.grid[x][y].type].green;
-                b = Color[G.grid[x][y].type].blue;
-                s = 0;
-
+                gt = G.grid[x][y].type;
+                r = Color[gt].red;
+                g = Color[gt].green;
+                b = Color[gt].blue;
                 for (t = 0, th = 0; t < G.scale; t += 1, th += th_inc) {
                     for (s = 0, sh = 0; s < G.scale; s += 1, sh += 4) {
                         index = yh + th + xh + sh;
-                        imageData.data[index] = r;
-                        imageData.data[index + 1] = g;
-                        imageData.data[index + 2] = b;
-                        imageData.data[index + 3] = 255;
+                        id[index] = r;
+                        id[index + 1] = g;
+                        id[index + 2] = b;
+                        id[index + 3] = 255;
                     }
                 }
             }
