@@ -149,31 +149,47 @@ var model = (function () {
 
         if (x === 0) {
             if (y === 0) {
-                neighbor =  choose_among([G.grid[x + 1][y], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
+                // neighbor =  choose_among([G.grid[x + 1][y], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
+                neighbor = choose_among([4, 6, 7]);
             } else if (y + 1 === G.height) {
-                neighbor =  choose_among([G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x + 1][y]]);
+                // neighbor = choose_among([G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x + 1][y]]);
+                neighbor = choose_among([1, 2, 4]);
             } else {
-                neighbor =  choose_among([G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x + 1][y], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
+                // neighbor = choose_among([G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x + 1][y], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
+                neighbor = choose_among([1, 2, 4, 6, 7]);
             }
         } else if (x + 1 === G.width) {
             if (y === 0) {
-                neighbor =  choose_among([G.grid[x - 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1]]);
+                // neighbor =  choose_among([G.grid[x - 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1]]);
+                neighbor = choose_among([3, 5, 6]);
             } else if (y + 1 === G.height) {
-                neighbor =  choose_among([G.grid[x - 1][y - 1], G.grid[x - 1][y], G.grid[x][y - 1]]);
+                // neighbor =  choose_among([G.grid[x - 1][y - 1], G.grid[x - 1][y], G.grid[x][y - 1]]);
+                neighbor = choose_among([0, 3, 1]);
             } else {
-                neighbor =  choose_among([G.grid[x - 1][y - 1], G.grid[x][y - 1], G.grid[x - 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1]]);
+                // neighbor = choose_among([G.grid[x - 1][y - 1], G.grid[x][y - 1], G.grid[x - 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1]]);
+                neighbor = choose_among([0, 1, 3, 5, 6]);
             }
         } else {
             if (y === 0) {
-                neighbor =  choose_among([G.grid[x - 1][y], G.grid[x + 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
+                // neighbor = choose_among([G.grid[x - 1][y], G.grid[x + 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
+                neighbor = choose_among([3, 4, 5, 6, 7]);
             } else if (y + 1 === G.height) {
-                neighbor =  choose_among([G.grid[x - 1][y - 1], G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x - 1][y], G.grid[x + 1][y]]);
+                // neighbor = choose_among([G.grid[x - 1][y - 1], G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x - 1][y], G.grid[x + 1][y]]);
+                neighbor = choose_among([0, 1, 2, 3, 4]);
             } else {
-                neighbor =  choose_among([G.grid[x - 1][y - 1], G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x - 1][y], G.grid[x + 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
+                // neighbor = choose_among([G.grid[x - 1][y - 1], G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x - 1][y], G.grid[x + 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
+                neighbor = choose_among([0, 1, 2, 3, 4, 5, 6, 7]);
             }
         }
 
-        return neighbor;
+        if ( neighbor == 0 ) return G.grid[x-1][y-1];
+        if ( neighbor == 1 ) return G.grid[x][y-1];
+        if ( neighbor == 2 ) return G.grid[x+1][y-1];
+        if ( neighbor == 3 ) return G.grid[x-1][y];
+        if ( neighbor == 4 ) return G.grid[x+1][y];
+        if ( neighbor == 5 ) return G.grid[x-1][y+1];
+        if ( neighbor == 6 ) return G.grid[x][y+1];
+        if ( neighbor == 7 ) return G.grid[x+1][y+1];
     }
 
     function probabilistic_event_happens(p_event) {
