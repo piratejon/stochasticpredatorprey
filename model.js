@@ -4,15 +4,10 @@
 var model = (function () {
     "use strict";
 
-    var G, logtome, Color;
+    var G, Color;
 
     // Color = Object.freeze({'bare': '#22ff22', 'rabbit': '#2222ff', 'fox': '#ff2222'});
     Color = Object.freeze({'bare': {'red': 0x22, 'green': 0xff, 'blue': 0x22}, 'rabbit': {'red': 0x22, 'green': 0x22, 'blue': 0xff}, 'fox': {'red': 0xff, 'green': 0x22, 'blue': 0x22}});
-
-    function log(s) {
-        G.logtome.value += s + '\n';
-        G.logtome.scrollTop = G.logtome.scrollHeight;
-    }
 
     function Square(type, age) {
         this.type = type === undefined ? 'bare' : type;
@@ -227,7 +222,7 @@ var model = (function () {
         G.rabbit_counter.innerHTML = rabbits;
         G.fox_counter.innerHTML = foxes;
         G.iteration_counter.innerHTML = G.iteration;
-        G.logtome.value += "Iteration: " + G.iteration + "; Rabbits: " + rabbits + "; Foxes: " + foxes + "\n";
+        G.memorylog += "Iteration: " + G.iteration + "; Rabbits: " + rabbits + "; Foxes: " + foxes + "\n";
     }
 
     function pause() {
@@ -257,7 +252,7 @@ var model = (function () {
 
     function start() {
         pause();
-        if (G.render.checked) {
+        if (G.render.checked === false) {
             G.timer = setInterval(advance, 0);
         } else {
             G.timer = setInterval(advance, G.animate_delay);
@@ -276,7 +271,6 @@ var model = (function () {
         Math.seedrandom(seed.toString());
 
         G = {};
-        G.logtome = document.getElementById('logtome');
         G.width = x_dimension;
         G.height = y_dimension;
         G.scale = scale;
@@ -300,7 +294,7 @@ var model = (function () {
             G.grid[x] = [];
         }
 
-        G.logtome.value = "Parameters: " + seed + "," + G.width + "," + G.height + "," + G.percent_initial_rabbits + "," + G.percent_initial_foxes + "," + G.p_rabbit_breed + "," + G.p_fox_breed + "," + G.p_fox_die + "\n";
+        G.memorylog = "Parameters: " + seed + "," + G.width + "," + G.height + "," + G.percent_initial_rabbits + "," + G.percent_initial_foxes + "," + G.p_rabbit_breed + "," + G.p_fox_breed + "," + G.p_fox_die + "\n";
 
         clear_board();
         sprinkle();
@@ -314,7 +308,7 @@ var model = (function () {
     }
 
     function downloadlog(mimetype) {
-        var uri = "data:" + mimetype + ";filename=modellog.txt," + encodeURIComponent(G.logtome.value);
+        var uri = "data:" + mimetype + ";filename=modellog.txt," + encodeURIComponent(G.memorylog);
         window.open(uri, 'modellog.txt');
     }
 
