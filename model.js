@@ -105,24 +105,26 @@ var model = (function () {
     }
 
     function render() {
-        var x, y, image, imageData, s, t, yh, r, g, b, WIDTH, HEIGHT, index;
+        var x, y, image, imageData, s, t, yh, xh, r, g, b, WIDTH, HEIGHT, index, sh, th, yh_inc, xh_inc, th_inc;
 
-        WIDTH = G.canvas.width;
         HEIGHT = G.canvas.height;
+
+        yh_inc = 4 * G.scale * HEIGHT;
+        xh_inc = 4 * G.scale;
+        th_inc = 4 * HEIGHT;
 
         imageData = G.ctx.createImageData(G.canvas.width, G.canvas.height);
 
-        yh = 0;
-        for (y = 0; y < G.height; y += 1) {
-            for (x = 0; x < G.width; x += 1) {
+        for (y = 0, yh = 0; y < G.height; y += 1, yh += yh_inc) {
+            for (x = 0, xh = 0; x < G.width; x += 1, xh += xh_inc) {
                 r = Color[G.grid[x][y].type].red;
                 g = Color[G.grid[x][y].type].green;
                 b = Color[G.grid[x][y].type].blue;
                 s = 0;
 
-                for (t = 0; t < G.scale; t += 1) {
-                    for (s = 0; s < G.scale; s += 1) {
-                        index = 4 * ((((y * G.scale) + t) * G.scale * G.height) + (x * G.scale) + s);
+                for (t = 0, th = 0; t < G.scale; t += 1, th += th_inc) {
+                    for (s = 0, sh = 0; s < G.scale; s += 1, sh += 4) {
+                        index = yh + th + xh + sh;
                         imageData.data[index] = r;
                         imageData.data[index + 1] = g;
                         imageData.data[index + 2] = b;
