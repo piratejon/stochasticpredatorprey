@@ -1,0 +1,7 @@
+an all-rabbit population tends to go to 100%, an all-fox population will go to 0
+rabbits in isolation will probably grow, foxes in isolation will die out
+these should be pretty straightforward to show with stochastic analysis techniques like we did in class.
+
+most seeds that i've seen eventually stabilize seemed to cycle the rabbits nearly to zero before getting into a "stable loop". possibly because the foxes need to die out. perhaps this is due to the rabbit birth rate vs fox death rate; need to quantify this with probabilities.
+show rabbits and foxes overlaid as a function of time. this is a different view of the same data that might suggest cyclic behavior/phases
+compare/contrast with typical LV prey vs predator and pred vs time and prey vs time. also look at (pred/prey) as a function of time and see if that ratio can berelated to any probabilities
