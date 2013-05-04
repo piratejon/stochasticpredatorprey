@@ -139,6 +139,10 @@ var model = (function () {
         return somelist[randomIntRange(0, somelist.length)];
     }
 
+    function choose_among_n(n, somelist) {
+        return somelist[randomIntRange(0, n)];
+    }
+
     function select_a_random_neighbor(x, y) {
       /***
         0 1 2
@@ -149,47 +153,48 @@ var model = (function () {
 
         if (x === 0) {
             if (y === 0) {
-                // neighbor =  choose_among([G.grid[x + 1][y], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
-                neighbor = choose_among([4, 6, 7]);
+                neighbor = choose_among_n(3, [4, 6, 7]);
             } else if (y + 1 === G.height) {
-                // neighbor = choose_among([G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x + 1][y]]);
-                neighbor = choose_among([1, 2, 4]);
+                neighbor = choose_among_n(3, [1, 2, 4]);
             } else {
-                // neighbor = choose_among([G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x + 1][y], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
-                neighbor = choose_among([1, 2, 4, 6, 7]);
+                neighbor = choose_among_n(5, [1, 2, 4, 6, 7]);
             }
         } else if (x + 1 === G.width) {
             if (y === 0) {
-                // neighbor =  choose_among([G.grid[x - 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1]]);
-                neighbor = choose_among([3, 5, 6]);
+                neighbor = choose_among_n(3, [3, 5, 6]);
             } else if (y + 1 === G.height) {
-                // neighbor =  choose_among([G.grid[x - 1][y - 1], G.grid[x - 1][y], G.grid[x][y - 1]]);
-                neighbor = choose_among([0, 3, 1]);
+                neighbor = choose_among_n(3, [0, 3, 1]);
             } else {
-                // neighbor = choose_among([G.grid[x - 1][y - 1], G.grid[x][y - 1], G.grid[x - 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1]]);
-                neighbor = choose_among([0, 1, 3, 5, 6]);
+                neighbor = choose_among_n(5, [0, 1, 3, 5, 6]);
             }
         } else {
             if (y === 0) {
-                // neighbor = choose_among([G.grid[x - 1][y], G.grid[x + 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
-                neighbor = choose_among([3, 4, 5, 6, 7]);
+                neighbor = choose_among_n(5, [3, 4, 5, 6, 7]);
             } else if (y + 1 === G.height) {
-                // neighbor = choose_among([G.grid[x - 1][y - 1], G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x - 1][y], G.grid[x + 1][y]]);
-                neighbor = choose_among([0, 1, 2, 3, 4]);
+                neighbor = choose_among_n(5, [0, 1, 2, 3, 4]);
             } else {
-                // neighbor = choose_among([G.grid[x - 1][y - 1], G.grid[x][y - 1], G.grid[x + 1][y - 1], G.grid[x - 1][y], G.grid[x + 1][y], G.grid[x - 1][y + 1], G.grid[x][y + 1], G.grid[x + 1][y + 1]]);
-                neighbor = choose_among([0, 1, 2, 3, 4, 5, 6, 7]);
+                neighbor = choose_among_n(8, [0, 1, 2, 3, 4, 5, 6, 7]);
             }
         }
 
-        if ( neighbor == 0 ) return G.grid[x-1][y-1];
-        if ( neighbor == 1 ) return G.grid[x][y-1];
-        if ( neighbor == 2 ) return G.grid[x+1][y-1];
-        if ( neighbor == 3 ) return G.grid[x-1][y];
-        if ( neighbor == 4 ) return G.grid[x+1][y];
-        if ( neighbor == 5 ) return G.grid[x-1][y+1];
-        if ( neighbor == 6 ) return G.grid[x][y+1];
-        if ( neighbor == 7 ) return G.grid[x+1][y+1];
+        switch (neighbor) {
+        case 0:
+            return G.grid[x - 1][y - 1];
+        case 1:
+            return G.grid[x][y - 1];
+        case 2:
+            return G.grid[x + 1][y - 1];
+        case 3:
+            return G.grid[x - 1][y];
+        case 4:
+            return G.grid[x + 1][y];
+        case 5:
+            return G.grid[x - 1][y + 1];
+        case 6:
+            return G.grid[x][y + 1];
+        case 7:
+            return G.grid[x + 1][y + 1];
+        }
     }
 
     function probabilistic_event_happens(p_event) {
