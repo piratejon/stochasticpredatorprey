@@ -6,7 +6,8 @@ var model = (function () {
 
     var G, logtome, Color;
 
-    Color = Object.freeze({'bare': '#22ff22', 'rabbit': '#2222ff', 'fox': '#ff2222'});
+    // Color = Object.freeze({'bare': '#22ff22', 'rabbit': '#2222ff', 'fox': '#ff2222'});
+    Color = Object.freeze({'bare': {'red': 0x22, 'green': 0xff, 'blue': 0x22}, 'rabbit': {'red': 0x22, 'green': 0x22, 'blue': 0xff}, 'fox': {'red': 0xff, 'green': 0x22, 'blue': 0x22}});
 
     function log(s) {
         G.logtome.value += s + '\n';
@@ -104,13 +105,33 @@ var model = (function () {
     }
 
     function render() {
-        var x, y, xs, ys;
-        for (x = 0, xs = 0; x < G.width; x += 1, xs += G.scale) {
-            for (y = 0, ys = 0; y < G.height; y += 1, ys += G.scale) {
-                G.ctx.fillStyle = Color[G.grid[x][y].type];
-                G.ctx.fillRect(xs, ys, G.scale, G.scale);
+        var x, y, image, imageData, s, t, yh, r, g, b, WIDTH, HEIGHT, index;
+
+        WIDTH = G.canvas.width;
+        HEIGHT = G.canvas.height;
+
+        imageData = G.ctx.createImageData(G.canvas.width, G.canvas.height);
+
+        yh = 0;
+        for (y = 0; y < G.height; y += 1) {
+            for (x = 0; x < G.width; x += 1) {
+                r = Color[G.grid[x][y].type].red;
+                g = Color[G.grid[x][y].type].green;
+                b = Color[G.grid[x][y].type].blue;
+                s = 0;
+
+                for (t = 0; t < G.scale; t += 1) {
+                    for (s = 0; s < G.scale; s += 1) {
+                        index = 4 * ((((y * G.scale) + t) * G.scale * G.height) + (x * G.scale) + s);
+                        imageData.data[index] = r;
+                        imageData.data[index + 1] = g;
+                        imageData.data[index + 2] = b;
+                        imageData.data[index + 3] = 255;
+                    }
+                }
             }
         }
+        G.ctx.putImageData(imageData, 0, 0);
     }
 
     function choose_among(somelist) {
